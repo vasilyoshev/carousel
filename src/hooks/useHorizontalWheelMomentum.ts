@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+
 import {
   CAROUSEL_GAIN,
   CAROUSEL_MAX_SPEED,
