@@ -1,0 +1,57 @@
+.carousel {
+  --gap: 12px;
+  --height: clamp(180px, 50vh, 520px);
+
+  display: flex;
+  gap: var(--gap);
+  align-items: center;
+
+  height: var(--height);
+  width: 100%;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  scroll-padding-inline: var(--gap);
+  padding: 0 var(--gap);
+
+  list-style: none;
+  margin: 0;
+
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+
+  scrollbar-width: none;
+}
+
+.snap_mandatory {
+  scroll-snap-type: x mandatory;
+}
+.snap_none {
+  scroll-snap-type: x none;
+}
+
+.item {
+  flex: 0 0 100%;
+  height: 100%;
+  scroll-snap-align: start;
+
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #111;
+}
+
+.img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  background: #000;
+}
+
+@media (min-width: 900px) {
+  .item {
+    flex-basis: 90%;
+  }
+}
