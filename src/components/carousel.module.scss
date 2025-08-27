@@ -1,57 +1,34 @@
 .carousel {
-  --gap: 12px;
-  --height: clamp(180px, 50vh, 520px);
-
   display: flex;
-  gap: var(--gap);
-  align-items: center;
-
-  height: var(--height);
-  width: 100%;
-
-  overflow-x: auto;
-  overflow-y: hidden;
-
-  scroll-padding-inline: var(--gap);
-  padding: 0 var(--gap);
-
+  gap: 12px;
+  overflow: auto;
   list-style: none;
   margin: 0;
-
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
-
-  scrollbar-width: none;
+  padding: 0;
+  width: 100%;
+  height: 100%;
 }
 
-.snap_mandatory {
-  scroll-snap-type: x mandatory;
-}
-.snap_none {
-  scroll-snap-type: x none;
+.carousel::-webkit-scrollbar {
+  display: none;
 }
 
 .item {
-  flex: 0 0 100%;
-  height: 100%;
-  scroll-snap-align: start;
-
-  position: relative;
-  border-radius: 12px;
+  flex: 0 0 auto;
+  border-radius: 8px;
   overflow: hidden;
-  background: #111;
 }
 
 .img {
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  display: block;
-  background: #000;
 }
 
-@media (min-width: 900px) {
-  .item {
-    flex-basis: 90%;
-  }
+.horizontal {
+  flex-direction: row;
+}
+
+.vertical {
+  flex-direction: column;
 }

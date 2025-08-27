@@ -1,17 +1,15 @@
 import styles from './Carousel.module.scss';
 
-type SnapMode = 'mandatory' | 'none';
+export type Orientation = 'horizontal' | 'vertical';
 
 type CarouselProps = {
   images: string[];
-  snap?: SnapMode;
+  orientation?: Orientation;
 };
 
-export const Carousel = ({ images, snap = 'none' }: CarouselProps) => {
+export const Carousel = ({ images, orientation = 'horizontal' }: CarouselProps) => {
   return (
-    <ul
-      className={`${styles.carousel} ${snap === 'mandatory' ? styles.snap_mandatory : styles.snap_none}`}
-    >
+    <ul className={`${styles.carousel} ${styles[orientation]}`}>
       {images.map((src, i) => (
         <li className={styles.item} key={`${i}-${src}`}>
           <img className={styles.img} src={src} alt={`Slide ${i + 1}`} />
