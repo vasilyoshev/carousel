@@ -1,17 +1,11 @@
 import { useRef } from 'react';
 
-import { useCarouselHorizontalScroll } from '../hooks/useCarouselHorizontalScroll';
-import { useCarouselVirtualization } from '../hooks/useCarouselVirtualization';
-import type { Orientation } from '../types/Orientation';
+import { useCarouselHorizontalScroll } from '../../hooks/useCarouselHorizontalScroll';
+import { useCarouselVirtualization } from '../../hooks/useCarouselVirtualization';
+import { ImgWithPlaceholder } from '../ImgWithPlaceholder/ImgWithPlaceholder';
+import type { CarouselProps } from '../../interfaces/CarouselProps';
 
 import styles from './Carousel.module.scss';
-
-type CarouselProps = {
-  images: string[];
-  orientation?: Orientation;
-  overscan?: number;
-  gap?: number;
-};
 
 export const Carousel = ({
   images,
@@ -57,7 +51,7 @@ export const Carousel = ({
             key={`${idx}-${src}`}
             style={isHorizontal ? { width: extent } : { height: extent }}
           >
-            <img className={styles.img} loading="lazy" src={src} alt={`Slide ${idx + 1}`} />
+            <ImgWithPlaceholder src={src} alt={`Slide ${idx + 1}`} />
           </li>
         );
       })}

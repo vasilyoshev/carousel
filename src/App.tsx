@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-import { Carousel } from './components/Carousel';
+import { Carousel } from './components/Carousel/Carousel';
 import type { Orientation } from './types/Orientation';
 
 function App() {
