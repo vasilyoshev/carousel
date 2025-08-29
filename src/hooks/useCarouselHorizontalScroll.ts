@@ -7,19 +7,19 @@ import {
   CAROUSEL_STOP_THRESHOLD,
 } from '../consts/carousel';
 
-export function useHorizontalWheelMomentum(
-  ref: React.RefObject<HTMLUListElement | null>,
-  enabled: boolean,
+export function useCarouselHorizontalScroll(
+  listRef: React.RefObject<HTMLUListElement | null>,
+  isEnabled: boolean,
 ) {
   useEffect(() => {
-    const el = ref.current;
-    if (!el || !enabled) return;
+    const listEl = listRef.current;
+    if (!listEl || !isEnabled) return;
 
     let animationFrame: number | undefined;
     let velocity = 0;
 
     const step = () => {
-      el.scrollLeft += velocity;
+      listEl.scrollLeft += velocity;
       velocity *= CAROUSEL_FRICTION;
 
       if (Math.abs(velocity) > CAROUSEL_STOP_THRESHOLD) {
@@ -38,11 +38,11 @@ export function useHorizontalWheelMomentum(
       if (!animationFrame) animationFrame = requestAnimationFrame(step);
     };
 
-    el.addEventListener('wheel', onWheel);
+    listEl.addEventListener('wheel', onWheel);
 
     return () => {
-      el.removeEventListener('wheel', onWheel);
+      listEl.removeEventListener('wheel', onWheel);
       if (animationFrame) cancelAnimationFrame(animationFrame);
     };
-  }, [ref, enabled]);
+  }, [listRef, isEnabled]);
 }
