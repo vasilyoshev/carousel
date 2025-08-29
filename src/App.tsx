@@ -23,11 +23,11 @@ function App() {
       {/* <div style={{ width: 600, height: 600, border: '2px solid white' }}>
         <Carousel images={picsRef.current} orientation={orientation} gap={30} />
       </div> */}
-      {/* <div style={{ width: 600, height: 300, border: '2px solid white' }}>
-        <Carousel images={picsRef.current} orientation="horizontal" />
-      </div>*/}
-      <div style={{ height: 600, border: '2px solid white' }}>
+      <div style={{ height: 500, border: '2px solid white' }}>
         <Carousel images={picsRef.current} orientation={orientation} />
+      </div>
+      <div style={{ width: 300, height: 600, border: '2px solid white' }}>
+        <Carousel images={picsRef.current} orientation="vertical" />
       </div>
     </>
   );
