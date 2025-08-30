@@ -58,6 +58,10 @@
   align-items: center;
   gap: 8px;
   color: #ff6b6b;
+
+  .errorText {
+    text-align: center;
+  }
 }
 
 .retryBtn {

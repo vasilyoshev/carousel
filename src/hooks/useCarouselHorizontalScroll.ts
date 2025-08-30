@@ -5,7 +5,7 @@ import {
   CAROUSEL_MAX_SPEED,
   CAROUSEL_FRICTION,
   CAROUSEL_STOP_THRESHOLD,
-} from '../consts/carousel';
+} from '../consts/carouselScroll';
 
 export function useCarouselHorizontalScroll(
   listRef: React.RefObject<HTMLUListElement | null>,

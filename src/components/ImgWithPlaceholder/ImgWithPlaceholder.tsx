@@ -16,7 +16,7 @@ export const ImgWithPlaceholder = ({ src, alt }: ImgWithPlaceholderProps) => {
 
   const ErrorBox = () => (
     <div className={styles.errorBox}>
-      <span>Failed to load</span>
+      <span className={styles.errorText}>Failed to load</span>
       <button className={styles.retryBtn} onClick={handleRetry}>
         Retry
       </button>
