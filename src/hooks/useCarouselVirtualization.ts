@@ -19,8 +19,9 @@ export function useCarouselVirtualization({
   const totalLengthRef = useRef<number>(0);
 
   const rawAfter = totalLengthRef.current - offsetsRef.current[range.end];
-  const paddingStart = range.start === 0 ? 0 : Math.max(0, offsetsRef.current[range.start] - gap);
-  const paddingEnd = Math.max(0, range.end < images.length ? rawAfter - gap : rawAfter);
+  const paddingStart =
+    range.start === 0 ? 0 : Math.max(0, offsetsRef.current[range.start] - gap) || 0;
+  const paddingEnd = Math.max(0, range.end < images.length ? rawAfter - gap : rawAfter) || 0;
 
   const imagesSlice = images.slice(range.start, range.end);
 
@@ -87,5 +88,6 @@ export function useCarouselVirtualization({
     paddingEnd,
     imagesSlice,
     sizesRef,
+    totalLength: totalLengthRef.current,
   };
 }

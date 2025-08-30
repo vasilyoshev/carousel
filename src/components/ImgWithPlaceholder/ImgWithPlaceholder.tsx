@@ -25,12 +25,6 @@ export const ImgWithPlaceholder = ({ src, alt }: ImgWithPlaceholderProps) => {
 
   return (
     <div className={styles.frame}>
-      {state !== 'loaded' && (
-        <div className={styles.placeholder} aria-hidden>
-          {state === 'error' ? <ErrorBox /> : <span className={styles.spinner} />}
-        </div>
-      )}
-
       <img
         key={retryKey}
         className={`${styles.img} ${state !== 'loaded' ? styles.imgHidden : ''}`}
@@ -41,6 +35,12 @@ export const ImgWithPlaceholder = ({ src, alt }: ImgWithPlaceholderProps) => {
         loading="lazy"
         decoding="async"
       />
+
+      {state !== 'loaded' && (
+        <div className={styles.overlay}>
+          {state === 'error' ? <ErrorBox /> : <span className={styles.spinner} />}
+        </div>
+      )}
     </div>
   );
 };
