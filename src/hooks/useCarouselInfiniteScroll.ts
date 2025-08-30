@@ -26,7 +26,6 @@ export function useCarouselInfiniteScroll(
     const midBlock = Math.floor(repeatCount / 2);
     const center = loopLength * midBlock;
 
-    // Center initially
     centerTo(listEl, center);
 
     const threshold = Math.min(300, loopLength * 0.1);
