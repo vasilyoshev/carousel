@@ -5,14 +5,14 @@ import type { Orientation } from './types/Orientation';
 
 function App() {
   const picsRef = useRef<string[]>(
-    Array.from({ length: 10000 }, (_, i) => {
+    Array.from({ length: 1000 }, (_, i) => {
       const w = 100 + Math.floor(Math.random() * 200);
       const h = 100 + Math.floor(Math.random() * 200);
       return `https://picsum.photos/seed/${i}/${w}/${h}`;
     }),
   );
 
-  const [orientation, setOrientation] = useState<Orientation>('vertical');
+  const [orientation, setOrientation] = useState<Orientation>('horizontal');
   return (
     <>
       <button
@@ -21,7 +21,7 @@ function App() {
         Change orientation
       </button>
       <div style={{ height: 500, border: '2px solid white' }}>
-        <Carousel images={picsRef.current} orientation={orientation} overscan={0} />
+        <Carousel images={picsRef.current} orientation={orientation} />
       </div>
     </>
   );

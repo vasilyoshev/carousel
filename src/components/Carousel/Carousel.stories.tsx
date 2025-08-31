@@ -139,23 +139,6 @@ export const NoGap: Story = {
   },
 };
 
-export const LargeGap: Story = {
-  args: { gap: 1000 },
-  render: (args) => {
-    const picsRef = useRef<string[]>(getRandomPics(60));
-    return (
-      <Wrapper width={args.width} height={args.height}>
-        <Carousel
-          images={picsRef.current}
-          orientation={args.orientation}
-          overscan={args.overscan}
-          gap={args.gap}
-        />
-      </Wrapper>
-    );
-  },
-};
-
 export const Vertical: Story = {
   args: { orientation: 'vertical' },
   render: (args) => {
@@ -325,38 +308,6 @@ export const HighImageCount1000: Story = {
 export const HighImageCount10000: Story = {
   render: (args) => {
     const picsRef = useRef<string[]>(getRandomPics(10000));
-    return (
-      <Wrapper width={args.width} height={args.height}>
-        <Carousel
-          images={picsRef.current}
-          orientation={args.orientation}
-          overscan={args.overscan}
-          gap={args.gap}
-        />
-      </Wrapper>
-    );
-  },
-};
-
-export const HighImageCount100000: Story = {
-  render: (args) => {
-    const picsRef = useRef<string[]>(getRandomPics(100000));
-    return (
-      <Wrapper width={args.width} height={args.height}>
-        <Carousel
-          images={picsRef.current}
-          orientation={args.orientation}
-          overscan={args.overscan}
-          gap={args.gap}
-        />
-      </Wrapper>
-    );
-  },
-};
-
-export const HighImageCount1000000: Story = {
-  render: (args) => {
-    const picsRef = useRef<string[]>(getRandomPics(1000000));
     return (
       <Wrapper width={args.width} height={args.height}>
         <Carousel

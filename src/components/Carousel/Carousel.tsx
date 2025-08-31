@@ -73,17 +73,19 @@ export const Carousel = ({
   useEffect(() => {
     if (!images?.length) return;
     const mainTarget = mainSize > 0 ? mainSize * 2 : baseTotal * 3;
-    const est = Math.max(3, Math.ceil(mainTarget / Math.max(1, baseTotal)));
-    setRepeatCount(est);
+    const next = Math.max(3, Math.ceil(mainTarget / Math.max(1, baseTotal)));
+    setRepeatCount((prev) => (prev === next ? prev : next));
   }, [images, baseTotal, mainSize]);
 
   useEffect(() => {
     if (!images?.length || !listRef.current || totalLength <= 0) return;
-    const needed = (isHorizontal ? listRef.current.clientWidth : listRef.current.clientHeight) * 2;
-    if (totalLength < needed) {
-      setRepeatCount((r) => Math.min(r + 1, 50));
+    const viewportMain =
+      (isHorizontal ? listRef.current.clientWidth : listRef.current.clientHeight) || 0;
+    const needed = viewportMain * 2;
+    if (needed > 0 && totalLength < needed && repeatCount < 50) {
+      setRepeatCount((prev) => prev + 1);
     }
-  }, [images, isHorizontal, totalLength]);
+  }, [images, isHorizontal, totalLength, repeatCount]);
 
   const PaddingListItem = ({ padding }: { padding: number }) => (
     <li
