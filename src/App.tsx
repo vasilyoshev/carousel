@@ -20,8 +20,8 @@ function App() {
       >
         Change orientation
       </button>
-      <div style={{ height: 800, border: '2px solid white' }}>
-        <Carousel images={picsRef.current} orientation={orientation} />
+      <div style={{ height: 500, border: '2px solid white' }}>
+        <Carousel images={picsRef.current} orientation={orientation} overscan={0} />
       </div>
     </>
   );
