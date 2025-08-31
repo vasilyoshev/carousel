@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useLayoutEffect, useState } from 'react';
+
 import { useCarouselHorizontalScroll } from '../../hooks/useCarouselHorizontalScroll';
 import { useCarouselVirtualization } from '../../hooks/useCarouselVirtualization';
 import { useCarouselInfiniteScroll } from '../../hooks/useCarouselInfiniteScroll';

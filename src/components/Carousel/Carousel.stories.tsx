@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useRef, useState } from 'react';
-import { Carousel } from './Carousel';
+
 import type { Orientation } from '../../types/Orientation';
+
+import { Carousel } from './Carousel';
 
 const getRandomPics = (count: number, wMin = 1000, wMax = 3000, hMin = 1000, hMax = 3000) =>
   Array.from({ length: count }, (_, i) => {
