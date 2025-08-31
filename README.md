@@ -4,18 +4,19 @@ A high‑performance **infinite** image carousel built with **React 19**, **Type
 
 <div align="center">
   <a href="https://carousel-ly7m.onrender.com/">
-    <img alt="Render – Storybook" src="https://img.shields.io/badge/Render-Storybook-46E3B7?logo=render&logoColor=white">
+    <img alt="Render – Storybook" src="https://img.shields.io/badge/🚀_Live-Storybook-46E3B7?style=for-the-badge&logo=render&logoColor=white">
   </a>
-  <img alt="React 19" src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white">
-  <img alt="TypeScript 5" src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white">
-  <img alt="Vite 7" src="https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white">
-  <img alt="Storybook 9" src="https://img.shields.io/badge/Storybook-9-FF4785?logo=storybook&logoColor=white">
-  <img alt="Vitest 3" src="https://img.shields.io/badge/Vitest-3-6E9F18?logo=vitest&logoColor=white">
-  <img alt="SCSS Modules" src="https://img.shields.io/badge/SCSS-Modules-CC6699?logo=sass&logoColor=white">
-  <img alt="ESLint" src="https://img.shields.io/badge/Lint-ESLint-4B32C3?logo=eslint&logoColor=white">
-  <img alt="Prettier" src="https://img.shields.io/badge/Format-Prettier-F7B93E?logo=prettier&logoColor=white">
-  <img alt="MIT" src="https://img.shields.io/badge/License-MIT-informational">
+  <img alt="React 19" src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=white">
+  <img alt="TypeScript 5" src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white">
+  <img alt="Vite 7" src="https://img.shields.io/badge/Vite-7-646CFF?style=for-the-badge&logo=vite&logoColor=white">
+  <img alt="Storybook 9" src="https://img.shields.io/badge/Storybook-9-FF4785?style=for-the-badge&logo=storybook&logoColor=white">
+  <img alt="Vitest 3" src="https://img.shields.io/badge/Vitest-3-6E9F18?style=for-the-badge&logo=vitest&logoColor=white">
+  <img alt="SCSS Modules" src="https://img.shields.io/badge/SCSS-Modules-CC6699?style=for-the-badge&logo=sass&logoColor=white">
+  <img alt="ESLint" src="https://img.shields.io/badge/Lint-ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white">
+  <img alt="Prettier" src="https://img.shields.io/badge/Format-Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=white">
+  <img alt="MIT" src="https://img.shields.io/badge/License-MIT-informational?style=for-the-badge">
 </div>
+
 
 ---
 
