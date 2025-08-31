@@ -18,20 +18,6 @@ export const Carousel = ({
   const isHorizontal = orientation === 'horizontal';
 
   const [{ mainSize, crossSize }, setSizes] = useState({ mainSize: 0, crossSize: 0 });
-  useLayoutEffect(() => {
-    const el = listRef.current;
-    if (!el) return;
-    const read = () => {
-      const main = isHorizontal ? el.clientWidth : el.clientHeight;
-      const cross = isHorizontal ? el.clientHeight : el.clientWidth;
-      setSizes({ mainSize: main, crossSize: cross });
-    };
-    read();
-    const ro = new ResizeObserver(read);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [isHorizontal]);
-
   const [repeatCount, setRepeatCount] = useState(3);
 
   const baseTotal = useMemo(() => {
@@ -49,13 +35,6 @@ export const Carousel = ({
       .reduce((a, b) => a + b, 0);
     return est + Math.max(0, images.length - 1) * gap;
   }, [images, isHorizontal, crossSize, gap]);
-
-  useEffect(() => {
-    if (!images?.length) return;
-    const mainTarget = mainSize > 0 ? mainSize * 2 : baseTotal * 3;
-    const est = Math.max(3, Math.ceil(mainTarget / Math.max(1, baseTotal)));
-    setRepeatCount(est);
-  }, [images, baseTotal, mainSize]);
 
   const loopImages = useMemo(() => {
     if (!images?.length) return images;
@@ -75,6 +54,29 @@ export const Carousel = ({
       gap,
     });
 
+  useCarouselInfiniteScroll(listRef, isHorizontal, repeatCount, totalLength);
+
+  useLayoutEffect(() => {
+    const el = listRef.current;
+    if (!el) return;
+    const read = () => {
+      const main = isHorizontal ? el.clientWidth : el.clientHeight;
+      const cross = isHorizontal ? el.clientHeight : el.clientWidth;
+      setSizes({ mainSize: main, crossSize: cross });
+    };
+    read();
+    const ro = new ResizeObserver(read);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [isHorizontal]);
+
+  useEffect(() => {
+    if (!images?.length) return;
+    const mainTarget = mainSize > 0 ? mainSize * 2 : baseTotal * 3;
+    const est = Math.max(3, Math.ceil(mainTarget / Math.max(1, baseTotal)));
+    setRepeatCount(est);
+  }, [images, baseTotal, mainSize]);
+
   useEffect(() => {
     if (!images?.length || !listRef.current || totalLength <= 0) return;
     const needed = (isHorizontal ? listRef.current.clientWidth : listRef.current.clientHeight) * 2;
@@ -83,9 +85,7 @@ export const Carousel = ({
     }
   }, [images, isHorizontal, totalLength]);
 
-  useCarouselInfiniteScroll(listRef, isHorizontal, repeatCount, totalLength);
-
-  const paddingListItem = (padding: number) => (
+  const PaddingListItem = ({ padding }: { padding: number }) => (
     <li
       className={styles.item}
       aria-hidden
@@ -99,7 +99,7 @@ export const Carousel = ({
 
   return (
     <ul ref={listRef} className={`${styles.carousel} ${styles[orientation]}`} style={{ gap }}>
-      {paddingListItem(paddingStart)}
+      {<PaddingListItem padding={paddingStart} />}
       {imagesSlice.map((src, i) => {
         const idx = range.start + i;
         const extent = sizesRef.current[idx] || 1;
@@ -115,7 +115,7 @@ export const Carousel = ({
           </li>
         );
       })}
-      {paddingListItem(paddingEnd)}
+      {<PaddingListItem padding={paddingEnd} />}
     </ul>
   );
 };
