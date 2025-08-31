@@ -26,13 +26,26 @@ export function useCarouselVirtualization({
   const imagesSlice = images.slice(range.start, range.end);
 
   const updateRange = (listEl: HTMLUListElement) => {
-    const scrollOffset = isHorizontal ? listEl.scrollLeft : listEl.scrollTop;
+    if (!images.length) {
+      setRange({ start: 0, end: 0 });
+      return;
+    }
+
+    const offsets = offsetsRef.current;
+    const sizes = sizesRef.current;
+    const scroll = isHorizontal ? listEl.scrollLeft : listEl.scrollTop;
     const viewport = isHorizontal ? listEl.clientWidth : listEl.clientHeight;
-    const start = Math.max(0, findIndexByOffset(scrollOffset, offsetsRef.current) - overscan);
-    const end = Math.min(
-      images.length,
-      findIndexByOffset(scrollOffset + viewport, offsetsRef.current) + overscan,
-    );
+    const viewEnd = scroll + viewport;
+
+    let start = findIndexByOffset(scroll, offsets);
+    if (offsets[start] + (sizes[start] ?? 0) <= scroll) start += 1;
+
+    let end = findIndexByOffset(viewEnd, offsets) + 1;
+
+    start = Math.max(0, start - overscan);
+    end = Math.min(images.length, end + overscan);
+    if (end < start) end = start;
+
     setRange({ start, end });
   };
 
@@ -70,7 +83,7 @@ export function useCarouselVirtualization({
     totalLengthRef.current = Math.max(0, offsets[images.length] - gap);
 
     if (listRef.current) updateRange(listRef.current);
-  }, [images, crossAxisSize, isHorizontal, listRef, gap]);
+  }, [images, crossAxisSize, isHorizontal, listRef, gap, overscan]);
 
   useEffect(() => {
     const listEl = listRef.current;
@@ -80,7 +93,7 @@ export function useCarouselVirtualization({
     listEl.addEventListener('scroll', onScroll);
 
     return () => listEl.removeEventListener('scroll', onScroll);
-  }, [images, isHorizontal, listRef, gap]);
+  }, [images, isHorizontal, listRef, gap, overscan]);
 
   return {
     range,

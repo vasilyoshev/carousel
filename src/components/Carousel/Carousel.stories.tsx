@@ -93,7 +93,7 @@ export const FullScreen: Story = {
   render: (args) => {
     const picsRef = useRef<string[]>(getRandomPics(400));
     return (
-      <Wrapper width="100vw" height="100vh">
+      <Wrapper width="99vw" height="99vh">
         <Carousel
           images={picsRef.current}
           orientation={args.orientation}
