@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useRef, useState } from 'react';
 
+import { CAROUSEL_FRICTION, CAROUSEL_GAIN } from '../../consts/carouselScroll';
 import type { Orientation } from '../../types/Orientation';
 
 import { Carousel } from './Carousel';
@@ -41,6 +42,8 @@ type StoryProps = {
   orientation: Orientation;
   overscan: number;
   gap: number;
+  gain: number;
+  friction: number;
 };
 
 const meta: Meta<StoryProps> = {
@@ -56,6 +59,8 @@ const meta: Meta<StoryProps> = {
     orientation: { control: { type: 'radio' }, options: ['horizontal', 'vertical'] },
     overscan: { control: { type: 'range', min: 0, max: 50, step: 1 } },
     gap: { control: { type: 'range', min: 0, max: 80, step: 1 } },
+    gain: { control: { type: 'range', min: 0.01, max: 1.0, step: 0.01 } },
+    friction: { control: { type: 'range', min: 0.8, max: 0.995, step: 0.001 } },
   },
   args: {
     width: 800,
@@ -63,6 +68,8 @@ const meta: Meta<StoryProps> = {
     orientation: 'horizontal',
     overscan: 10,
     gap: 12,
+    gain: CAROUSEL_GAIN,
+    friction: CAROUSEL_FRICTION,
   },
 };
 export default meta;
@@ -82,6 +89,8 @@ export const Default: Story = {
           orientation={args.orientation}
           overscan={args.overscan}
           gap={args.gap}
+          gain={args.gain}
+          friction={args.friction}
         />
       </Wrapper>
     );
@@ -99,6 +108,8 @@ export const FullScreen: Story = {
           orientation={args.orientation}
           overscan={args.overscan}
           gap={args.gap}
+          gain={args.gain}
+          friction={args.friction}
         />
       </Wrapper>
     );
@@ -116,6 +127,8 @@ export const NoOverscan: Story = {
           orientation={args.orientation}
           overscan={args.overscan}
           gap={args.gap}
+          gain={args.gain}
+          friction={args.friction}
         />
       </Wrapper>
     );
@@ -133,6 +146,8 @@ export const NoGap: Story = {
           orientation={args.orientation}
           overscan={args.overscan}
           gap={args.gap}
+          gain={args.gain}
+          friction={args.friction}
         />
       </Wrapper>
     );
@@ -144,12 +159,14 @@ export const Vertical: Story = {
   render: (args) => {
     const picsRef = useRef<string[]>(getRandomPics(100));
     return (
-      <Wrapper width={args.width} height={args.height}>
+      <Wrapper width={300} height="95vh">
         <Carousel
           images={picsRef.current}
           orientation={args.orientation}
           overscan={args.overscan}
           gap={args.gap}
+          gain={args.gain}
+          friction={args.friction}
         />
       </Wrapper>
     );
@@ -166,6 +183,8 @@ export const ZeroImages: Story = {
           orientation={args.orientation}
           overscan={args.overscan}
           gap={args.gap}
+          gain={args.gain}
+          friction={args.friction}
         />
       </Wrapper>
     );
@@ -182,6 +201,8 @@ export const OneImage: Story = {
           orientation={args.orientation}
           overscan={args.overscan}
           gap={args.gap}
+          gain={args.gain}
+          friction={args.friction}
         />
       </Wrapper>
     );
@@ -201,6 +222,8 @@ export const TwoImages: Story = {
           orientation={args.orientation}
           overscan={args.overscan}
           gap={args.gap}
+          gain={args.gain}
+          friction={args.friction}
         />
       </Wrapper>
     );
@@ -223,6 +246,8 @@ export const ErrorStates: Story = {
           orientation={args.orientation}
           overscan={args.overscan}
           gap={args.gap}
+          gain={args.gain}
+          friction={args.friction}
         />
       </Wrapper>
     );
@@ -249,6 +274,8 @@ export const DynamicData: Story = {
             orientation={args.orientation}
             overscan={args.overscan}
             gap={args.gap}
+            gain={args.gain}
+            friction={args.friction}
           />
         </Wrapper>
       </>
@@ -267,6 +294,8 @@ export const SuperWide: Story = {
           orientation={args.orientation}
           overscan={args.overscan}
           gap={args.gap}
+          gain={args.gain}
+          friction={args.friction}
         />
       </Wrapper>
     );
@@ -283,6 +312,8 @@ export const SuperHigh: Story = {
           orientation={args.orientation}
           overscan={args.overscan}
           gap={args.gap}
+          gain={args.gain}
+          friction={args.friction}
         />
       </Wrapper>
     );
@@ -299,6 +330,8 @@ export const HighImageCount1000: Story = {
           orientation={args.orientation}
           overscan={args.overscan}
           gap={args.gap}
+          gain={args.gain}
+          friction={args.friction}
         />
       </Wrapper>
     );
@@ -315,6 +348,119 @@ export const HighImageCount10000: Story = {
           orientation={args.orientation}
           overscan={args.overscan}
           gap={args.gap}
+          gain={args.gain}
+          friction={args.friction}
+        />
+      </Wrapper>
+    );
+  },
+};
+
+export const HighImageCount100000: Story = {
+  render: (args) => {
+    const picsRef = useRef<string[]>(getRandomPics(100000));
+    return (
+      <Wrapper width={args.width} height={args.height}>
+        <Carousel
+          images={picsRef.current}
+          orientation={args.orientation}
+          overscan={args.overscan}
+          gap={args.gap}
+          gain={args.gain}
+          friction={args.friction}
+        />
+      </Wrapper>
+    );
+  },
+};
+export const HighImageCount1000000: Story = {
+  render: (args) => {
+    const picsRef = useRef<string[]>(getRandomPics(1000000));
+    return (
+      <Wrapper width={args.width} height={args.height}>
+        <Carousel
+          images={picsRef.current}
+          orientation={args.orientation}
+          overscan={args.overscan}
+          gap={args.gap}
+          gain={args.gain}
+          friction={args.friction}
+        />
+      </Wrapper>
+    );
+  },
+};
+
+export const MomentumGentle: Story = {
+  args: { gain: 0.12, friction: 0.95 },
+  render: (args) => {
+    const picsRef = useRef<string[]>(getRandomPics(80));
+    return (
+      <Wrapper width={args.width} height={args.height}>
+        <Carousel
+          images={picsRef.current}
+          orientation={args.orientation}
+          overscan={args.overscan}
+          gap={args.gap}
+          gain={args.gain}
+          friction={args.friction}
+        />
+      </Wrapper>
+    );
+  },
+};
+
+export const MomentumSnappy: Story = {
+  args: { gain: 0.2, friction: 0.9 },
+  render: (args) => {
+    const picsRef = useRef<string[]>(getRandomPics(80));
+    return (
+      <Wrapper width={args.width} height={args.height}>
+        <Carousel
+          images={picsRef.current}
+          orientation={args.orientation}
+          overscan={args.overscan}
+          gap={args.gap}
+          gain={args.gain}
+          friction={args.friction}
+        />
+      </Wrapper>
+    );
+  },
+};
+
+export const LongGlide: Story = {
+  args: { gain: 0.18, friction: 0.985 },
+  render: (args) => {
+    const picsRef = useRef<string[]>(getRandomPics(120));
+    return (
+      <Wrapper width={args.width} height={args.height}>
+        <Carousel
+          images={picsRef.current}
+          orientation={args.orientation}
+          overscan={args.overscan}
+          gap={args.gap}
+          gain={args.gain}
+          friction={args.friction}
+        />
+      </Wrapper>
+    );
+  },
+};
+
+export const NoMomentumFeel: Story = {
+  args: { gain: 0.18, friction: 0.001 },
+  render: (args) => {
+    const picsRef = useRef<string[]>(getRandomPics(60));
+    return (
+      <Wrapper width={args.width} height={args.height}>
+        <Carousel
+          images={picsRef.current}
+          orientation={args.orientation}
+          overscan={args.overscan}
+          gap={args.gap}
+          gain={args.gain}
+          friction={args.friction}
         />
       </Wrapper>
     );

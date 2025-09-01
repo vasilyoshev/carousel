@@ -5,4 +5,6 @@ export interface CarouselProps {
   orientation?: Orientation;
   overscan?: number;
   gap?: number;
+  gain?: number;
+  friction?: number;
 }

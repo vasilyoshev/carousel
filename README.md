@@ -1,6 +1,6 @@
 # Infinite Image Carousel (React + Vite)
 
-A high‑performance **infinite** image carousel built with **React 19**, **TypeScript**, and **Vite**, designed to be smooth, responsive, and reusable. It features **virtualization**, **looping via scroll (no arrows)**, and efficient handling of **10,000+ images**.
+A high-performance **infinite** image carousel built with **React 19**, **TypeScript**, and **Vite**, designed to be smooth, responsive, and reusable. It features **virtualization**, **looping via scroll (no arrows)**, and efficient handling of **10,000+ images**.
 
 <div align="center">
   <a href="https://carousel-ly7m.onrender.com/">
@@ -17,6 +17,26 @@ A high‑performance **infinite** image carousel built with **React 19**, **Type
   <img alt="MIT" src="https://img.shields.io/badge/License-MIT-informational?style=for-the-badge">
 </div>
 
+---
+
+## 📑 Table of Contents
+- [Features](#-features)
+- [Getting Started](#-getting-started)
+- [Usage](#-usage)
+- [Props](#props)
+- [Architecture](#-architecture)
+- [How it Works](#-how-it-works)
+- [Responsiveness & Performance](#-responsiveness--performance)
+- [Accessibility](#-accessibility)
+- [Why Virtual Scroll Instead of Native?](#-why-virtual-scroll-instead-of-native)
+- [Performance Benchmarks](#-performance-benchmarks)
+- [Limitations / Future Work](#-limitations--future-work)
+- [Contributing](#-contributing)
+- [License](#-license)
+
+## 🧱 Prerequisites
+Node 20+ (recommended)  
+Package manager: npm (scripts assume npm but pnpm / yarn should work)
 
 ---
 
@@ -24,13 +44,15 @@ A high‑performance **infinite** image carousel built with **React 19**, **Type
 
 - **Infinite looping via scroll**
 - **Virtualized rendering** (only visible slides + overscan are mounted)
-- **Momentum wheel → horizontal mapping** for desktop
+- **Momentum wheel → main-axis mapping** for desktop (no native scroll)
 - **Responsive**: adapts to parent size
 - **Works with 10k+ images**
 - **Configurable & reusable** via props:
   - `orientation`: `'horizontal' | 'vertical'`
   - `gap`: spacing between slides (px)
   - `overscan`: extra slides before/after viewport for smoothness
+  - `gain`: sensitivity of wheel/drag input (default tuned)
+  - `friction`: momentum decay (default tuned)
 - **Robust image UX**: placeholder spinner, error + retry, lazy loading
 - **Quality tooling**: Vite, TypeScript, ESLint, Prettier, Vitest, Storybook
 
@@ -53,7 +75,7 @@ npm run dev
 npm run storybook
 ```
 
-### 4. Type‑check, lint, format, tests
+### 4. Type-check, lint, format, tests
 ```bash
 npm run typecheck
 npm run lint
@@ -71,7 +93,7 @@ npm run build-storybook # Storybook static build
 
 ## 📚 Usage
 
-Wrap the carousel in a container that defines its **height** and **width**. The carousel auto‑sizes to the container via `ResizeObserver`.
+Wrap the carousel in a container that defines its **height** and **width**. The carousel auto-sizes to the container via `ResizeObserver`.
 
 ```tsx
 import { Carousel } from './components/Carousel/Carousel';
@@ -97,66 +119,87 @@ export default function Demo() {
 }
 ```
 
-### Props
-
-```ts
-export type Orientation = 'horizontal' | 'vertical';
-
-export interface CarouselProps {
-  images: string[];            // required list of image URLs
-  orientation?: Orientation;   // default 'horizontal'
-  overscan?: number;           // default 10; extra slides rendered around viewport
-  gap?: number;                // default 12; spacing in pixels between slides
-}
+### Vertical Example
+```tsx
+<Carousel
+  images={images}
+  orientation="vertical"
+  gap={8}
+  overscan={6}
+/>
 ```
 
-**Notes**
-- The component estimates slide lengths from **aspect ratios**. For Picsum URLs, it parses `/width/height` from the URL.
-- For horizontal orientation, desktop wheel input is mapped to horizontal motion with friction and max‑speed caps; vertical orientation uses native vertical scroll.
+### Minimal (defaults)
+```tsx
+<Carousel images={images} />
+```
+
+### Props
+| Prop        | Type                        | Default        | Description |
+|-------------|-----------------------------|----------------|-------------|
+| images*     | string[]                    | (required)     | Image URLs. |
+| orientation | 'horizontal' \| 'vertical'  | 'horizontal'   | Main axis. |
+| overscan    | number                      | 2              | Extra slides before/after viewport. |
+| gap         | number                      | 12             | Spacing in px between slides. |
+| gain        | number                      | tuned constant | Input sensitivity (wheel/drag). |
+| friction    | number                      | tuned constant | Momentum decay factor. |
+
+> Only a small window of slides mounts; large arrays (1,000,000+) are fine.
+
+---
+
+## 🧩 Architecture
+
+- `useCarouselLayout` – measures the container, builds repeated list, computes `offsets`, `sizeAt`, `baseTotal`.
+- `useCarouselVirtualWindow` – computes visible `range` with overscan and applies slice offset.
+- `useCarouselInfiniteLoop` – centers on the middle block, re-centers when loop length changes.
+- `useCarouselKinetics` – pointer + wheel input, momentum/friction, rAF step (virtual scroll).
 
 ---
 
 ## 🧠 How it Works
 
 ### 1) Virtualization
-- Each image gets an **estimated extent** (width for horizontal, height for vertical) derived from the container’s cross‑axis size and the image’s aspect ratio.
-- We build a **prefix‑sum offsets array**: `offset[i] = sum(slide[0..i-1] + gaps)`.
-- On scroll, we **binary‑search** the offsets to compute the visible **range** and apply **overscan**.
-- Non‑visible content is collapsed into two **padding items** (`paddingStart`, `paddingEnd`) so total scroll size remains accurate.
+- Each image gets an estimated extent (width/height) from cross-axis size and aspect ratio.
+- Offsets array is built for binary-search of visible range.
+- Slice is shifted by a margin offset on the first item.
 
 ### 2) Infinite Looping
-- We **repeat** the input list (`repeatCount` times) until the total length covers multiple viewports.
-- The scroll position is **centered** on the middle block to maximize travel distance before a seam.
-- When approaching the “edge” block, we **teleport** the scroll position by ± one loop length while preserving the **fractional offset** so the jump is seamless.
-- A guard flag prevents feedback loops during teleporting.
+- Images repeated multiple times.
+- Centered on mid-block for maximum travel distance.
+- Recentered ± loop length when near an edge.
 
-### 3) Smooth Wheel→Horizontal Mapping
-- On desktop, vertical wheel input is converted to **horizontal velocity** with **friction**, **gain**, and **speed caps** for a natural feel.
-- The animator halts below a stop threshold to avoid background loops.
+### 3) Smooth Kinetics
+- Wheel input mapped to main axis with gain, friction, and speed caps.
+- Animator halts below threshold to stop background loops.
 
 ---
 
 ## 📱 Responsiveness & Performance
 
-- **ResizeObserver** keeps measurements in sync when the parent resizes.
-- Only a **small window** of slides is mounted; this enables **thousands of items** without sluggishness.
-- The list can handle **mixed aspect ratios** reliably (panoramas, portraits, squares).
+- `ResizeObserver` keeps measurements in sync.
+- Only a small window of slides is mounted.
+- Supports thousands of mixed-aspect-ratio images.
 
 ---
 
 ## ♿ Accessibility
 
-- Non‑content padding items are marked with `aria-hidden`.
-- Images include `alt` text; loading and error states are exposed visually.
-- **Future work** (nice‑to‑haves): keyboard focus ring for the scroller, optional page indicators with `aria-current`, reduced‑motion tuning.
+- Scroll-like interaction, no hidden focus traps.
+- Images include `alt` text; you can pass a custom alt factory.
+- Future work: keyboard navigation, indicators with `aria-current`.
 
 ---
 
-## 🔧 Configuration Tips
+## ❓ Why Virtual Scroll Instead of Native?
+- Precise control over momentum and friction (feels consistent across devices)
+- Infinite looping without cloning DOM nodes into extremely large scroll areas
+- Avoid large scroll offset drift / layout thrash
+- Easier to add future kinetic features (snap points, autoplay pause-on-interaction)
+- Browsers scroll size is only 33 million pixels
 
-- **`gap`**: increase for more breathing room; the virtualized total keeps scroll metrics correct.
-- **`overscan`**: increase if you see edge flashes during **very** fast scrolls; keep modest for best perf.
-- **`Orientation`**: horizontal enables desktop wheel→horizontal momentum; vertical uses native vertical scroll.
+## 🧪 Performance Benchmarks
+- Generates 1,000,000 mixed-aspect images
 
 ---
 

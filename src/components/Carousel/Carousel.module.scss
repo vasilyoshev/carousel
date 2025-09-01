@@ -1,11 +1,19 @@
 .carousel {
   display: flex;
-  overflow: auto;
+  overflow: hidden;
   list-style: none;
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
+
+  // block native panning on the axis you control, allow the other axis for page scroll
+  &.horizontal {
+    touch-action: pan-y;
+  }
+  &.vertical {
+    touch-action: pan-x;
+  }
 }
 
 .carousel::-webkit-scrollbar {
