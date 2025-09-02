@@ -27,7 +27,7 @@ export const ImgWithPlaceholder = ({ src, alt }: ImgWithPlaceholderProps) => {
     <div className={styles.frame}>
       <img
         key={retryKey}
-        className={`${styles.img} ${state !== 'loaded' ? styles.imgHidden : ''}`}
+        className={styles.img}
         src={src}
         alt={alt}
         onLoad={() => setState('loaded')}

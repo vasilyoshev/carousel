@@ -36,6 +36,15 @@ export const useCarouselLayout = ({
   );
 
   const { offsets, totalLength, sizeAt } = useMemo(() => {
+    if (crossAxisSize <= 0 || !repeatedImages.length) {
+      const offsets = [0];
+      return {
+        offsets,
+        totalLength: 0,
+        sizeAt: () => 0,
+      };
+    }
+
     const offsets = new Array<number>(repeatedImages.length + 1);
     offsets[0] = 0;
     for (let i = 1; i <= repeatedImages.length; i++) {
