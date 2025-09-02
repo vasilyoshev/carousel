@@ -87,6 +87,15 @@ export const useCarouselKinetics = ({
 
     const onPointerDown = (ev: PointerEvent) => {
       if (!ev.isPrimary) return;
+
+      // If starting on an interactive control, don't start a drag.
+      if (
+        ev.target instanceof HTMLElement &&
+        ev.target.closest('button, a, input, textarea, select, [role="button"], [data-no-drag]')
+      ) {
+        return;
+      }
+
       listEl.setPointerCapture?.(ev.pointerId);
 
       isDraggingRef.current = true;
