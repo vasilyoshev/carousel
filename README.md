@@ -99,7 +99,6 @@ Wrap the carousel in a container that defines its **height** and **width**. The 
 import { Carousel } from './components/Carousel/Carousel';
 
 const images = [
-  // Works with Picsum URLs
   'https://picsum.photos/id/1018/1000/600',
   'https://picsum.photos/id/1025/800/1200',
   'https://picsum.photos/id/103/1200/800',
@@ -150,7 +149,7 @@ export default function Demo() {
 
 ## 🧩 Architecture
 
-- `useCarouselLayout` – measures the container, builds repeated list, computes `offsets`, `sizeAt`, `baseTotal`.
+- `useCarouselLayout` – measures the container, computes exact `offsets`, `sizeAt`, `baseTotal`, and builds a locally repeated list long enough to cover ~2× viewport + overscan.
 - `useCarouselVirtualWindow` – computes visible `range` with overscan and applies slice offset.
 - `useCarouselInfiniteLoop` – centers on the middle block, re-centers when loop length changes.
 - `useCarouselKinetics` – pointer + wheel input, momentum/friction, rAF step (virtual scroll).
@@ -160,17 +159,17 @@ export default function Demo() {
 ## 🧠 How it Works
 
 ### 1) Virtualization
-- Each image gets an estimated extent (width/height) from cross-axis size and aspect ratio.
+- Each image gets an extent (width/height) from cross-axis size and aspect ratio.
 - Offsets array is built for binary-search of visible range.
-- Slice is shifted by a margin offset on the first item.
+- Only a small slice of repeated images is mounted, shifted by a margin offset.
 
 ### 2) Infinite Looping
-- Images repeated multiple times.
-- Centered on mid-block for maximum travel distance.
-- Recentered ± loop length when near an edge.
+- A minimal number of local repeats are generated automatically.
+- Carousel is centered on the mid-block for maximum travel distance.
+- Position is wrapped ± loop length when near an edge.
 
 ### 3) Smooth Kinetics
-- Wheel input mapped to main axis with gain, friction, and speed caps.
+- Wheel/drag input mapped to main axis with gain, friction, and speed caps.
 - Animator halts below threshold to stop background loops.
 
 ---
