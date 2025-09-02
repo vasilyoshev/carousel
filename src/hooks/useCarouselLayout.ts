@@ -48,7 +48,7 @@ export const useCarouselLayout = ({
 
     const localRepeat = Math.max(3, Math.min(50, needed));
     return { baseTotal: singleLoop, localRepeat };
-  }, [images, crossAxisSize, isHorizontal, gap, mainAxisSize, overscan]); // <-- overscan in deps
+  }, [images, crossAxisSize, isHorizontal, gap, mainAxisSize, overscan]);
 
   const repeatedImages = useMemo(
     () => (images.length ? Array(localRepeat).fill(images).flat() : []),

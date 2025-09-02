@@ -2,7 +2,6 @@ import { useRef } from 'react';
 
 import { ImgWithPlaceholder } from '../ImgWithPlaceholder/ImgWithPlaceholder';
 import type { CarouselProps } from '../../interfaces/CarouselProps';
-import { CAROUSEL_FRICTION, CAROUSEL_GAIN } from '../../consts/carouselScroll';
 import { useCarouselKinetics } from '../../hooks/useCarouselKinetics';
 import { useCarouselVirtualWindow } from '../../hooks/useCarouselVirtualWindow';
 import { useCarouselInfiniteLoop } from '../../hooks/useCarouselInfiniteLoop';
@@ -15,8 +14,8 @@ export const Carousel = ({
   orientation = 'horizontal',
   overscan = 2,
   gap = 12,
-  gain = CAROUSEL_GAIN,
-  friction = CAROUSEL_FRICTION,
+  gain = 0.12,
+  friction = 0.9,
 }: CarouselProps) => {
   const listElRef = useRef<HTMLUListElement>(null);
   const scrollPositionRef = useRef(0);

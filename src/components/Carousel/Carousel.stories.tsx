@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useRef, useState } from 'react';
 
-import { CAROUSEL_FRICTION, CAROUSEL_GAIN } from '../../consts/carouselScroll';
 import type { Orientation } from '../../types/Orientation';
 
 import { Carousel } from './Carousel';
@@ -68,8 +67,8 @@ const meta: Meta<StoryProps> = {
     orientation: 'horizontal',
     overscan: 10,
     gap: 12,
-    gain: CAROUSEL_GAIN,
-    friction: CAROUSEL_FRICTION,
+    gain: 0.12,
+    friction: 0.9,
   },
 };
 export default meta;

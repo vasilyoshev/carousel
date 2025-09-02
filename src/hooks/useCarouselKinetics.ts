@@ -1,7 +1,5 @@
 import { useEffect, useRef, type RefObject } from 'react';
 
-import { CAROUSEL_MAX_SPEED, CAROUSEL_STOP_THRESHOLD } from '../consts/carouselScroll';
-
 export const useCarouselKinetics = ({
   listElRef,
   scrollPositionRef,
@@ -27,6 +25,9 @@ export const useCarouselKinetics = ({
   gap: number;
   updateRange: () => void;
 }) => {
+  const CAROUSEL_MAX_SPEED = 500;
+  const CAROUSEL_STOP_THRESHOLD = 0.1;
+
   const scrollVelocityRef = useRef(0);
   const isDraggingRef = useRef(false);
   const lastPointerPosRef = useRef(0);
