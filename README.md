@@ -30,8 +30,6 @@ A high-performance **infinite** image carousel built with **React 19**, **TypeSc
 - [Accessibility](#-accessibility)
 - [Why Virtual Scroll Instead of Native?](#-why-virtual-scroll-instead-of-native)
 - [Performance Benchmarks](#-performance-benchmarks)
-- [Limitations / Future Work](#-limitations--future-work)
-- [Contributing](#-contributing)
 - [License](#-license)
 
 ## 🧱 Prerequisites

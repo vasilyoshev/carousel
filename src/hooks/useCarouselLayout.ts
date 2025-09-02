@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, type RefObject } from 'react';
+
 import { extentFromUrl } from '../utils/extentFromUrl';
 
 export const useCarouselLayout = ({

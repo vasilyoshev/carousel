@@ -1,4 +1,5 @@
 import { useEffect, useState, type RefObject } from 'react';
+
 import { findIndexByOffset } from '../utils/findIndexByOffset';
 
 export const useCarouselVirtualWindow = ({
