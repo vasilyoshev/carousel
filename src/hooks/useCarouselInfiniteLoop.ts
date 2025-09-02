@@ -1,24 +1,30 @@
 import { useEffect, useRef, type RefObject } from 'react';
 
 export const useCarouselInfiniteLoop = ({
-  repeatCount,
   totalLength,
+  baseTotal,
+  gap,
   scrollPositionRef,
   updateRange,
 }: {
-  repeatCount: number;
   totalLength: number;
+  baseTotal: number;
+  gap: number;
   scrollPositionRef: RefObject<number>;
   updateRange: () => void;
 }) => {
-  const prevLoopLengthRef = useRef<number>(null);
+  const prevLoopLengthRef = useRef<number | null>(null);
   const didInitialCenterRef = useRef(false);
 
   useEffect(() => {
-    if (repeatCount < 3 || !totalLength) return;
+    if (!totalLength || !baseTotal) return;
 
-    const loopLength = totalLength / repeatCount;
-    const midBlock = Math.floor(repeatCount / 2);
+    const loopLength = baseTotal + gap;
+    const repeats = loopLength > 0 ? Math.floor((totalLength + gap) / loopLength) : 0;
+
+    if (repeats < 3) return;
+
+    const midBlock = Math.floor(repeats / 2);
     const centerOfMid = loopLength * midBlock;
 
     if (!didInitialCenterRef.current) {
@@ -37,5 +43,5 @@ export const useCarouselInfiniteLoop = ({
     }
 
     prevLoopLengthRef.current = loopLength;
-  }, [repeatCount, totalLength]);
+  }, [totalLength, baseTotal, gap]);
 };

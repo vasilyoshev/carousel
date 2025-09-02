@@ -10,8 +10,9 @@ export const useCarouselKinetics = ({
   gain,
   friction,
   mainAxisSize,
-  repeatCount,
   totalLength,
+  baseTotal,
+  gap,
   updateRange,
 }: {
   listElRef: RefObject<HTMLUListElement | null>;
@@ -21,14 +22,16 @@ export const useCarouselKinetics = ({
   gain: number;
   friction: number;
   mainAxisSize: number;
-  repeatCount: number;
   totalLength: number;
+  baseTotal: number;
+  gap: number;
   updateRange: () => void;
 }) => {
   const scrollVelocityRef = useRef(0);
   const isDraggingRef = useRef(false);
   const lastPointerPosRef = useRef(0);
   const velSamplesRef = useRef<Array<{ t: number; d: number }>>([]);
+  const lastDeltaRef = useRef(0);
 
   useEffect(() => {
     const listEl = listElRef.current;
@@ -39,15 +42,19 @@ export const useCarouselKinetics = ({
     const step = () => {
       scrollPositionRef.current += scrollVelocityRef.current;
 
-      if (repeatCount >= 3 && totalLength > 0) {
-        const loopLength = totalLength / repeatCount;
-        const midBlock = Math.floor(repeatCount / 2);
+      const loopLength = baseTotal + gap;
+
+      if (loopLength > 0 && totalLength + gap >= loopLength * 3) {
+        const repeats = Math.floor((totalLength + gap) / loopLength);
+        const midBlock = Math.floor(repeats / 2);
         const pad = Math.min(300, loopLength * 0.1) - 1;
         const leftEdge = loopLength * (midBlock - 1) + pad;
         const rightEdge = loopLength * (midBlock + 1) - pad;
 
         const current = scrollPositionRef.current;
-        const dir = Math.sign(scrollVelocityRef.current) as -1 | 0 | 1;
+        const dir = Math.sign(
+          scrollVelocityRef.current !== 0 ? scrollVelocityRef.current : lastDeltaRef.current,
+        ) as -1 | 0 | 1;
 
         if (dir < 0 && current <= leftEdge) scrollPositionRef.current = current + loopLength;
         else if (dir > 0 && current >= rightEdge) scrollPositionRef.current = current - loopLength;
@@ -69,7 +76,6 @@ export const useCarouselKinetics = ({
       const scrollStepPx = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? mainAxisSize : 1;
       const scrollOffsetPx = event.deltaY * scrollStepPx * gain;
 
-      // Cancel momentum if direction changes
       if (
         scrollVelocityRef.current !== 0 &&
         Math.sign(scrollOffsetPx) !== Math.sign(scrollVelocityRef.current)
@@ -88,7 +94,6 @@ export const useCarouselKinetics = ({
     const onPointerDown = (ev: PointerEvent) => {
       if (!ev.isPrimary) return;
 
-      // If starting on an interactive control, don't start a drag.
       if (
         ev.target instanceof HTMLElement &&
         ev.target.closest('button, a, input, textarea, select, [role="button"], [data-no-drag]')
@@ -103,6 +108,7 @@ export const useCarouselKinetics = ({
 
       lastPointerPosRef.current = isHorizontal ? ev.clientX : ev.clientY;
       velSamplesRef.current = [{ t: performance.now(), d: 0 }];
+      lastDeltaRef.current = 0;
 
       ev.preventDefault();
     };
@@ -115,6 +121,8 @@ export const useCarouselKinetics = ({
       const delta = lastPointerPosRef.current - curr;
 
       lastPointerPosRef.current = curr;
+      lastDeltaRef.current = delta;
+
       scrollPositionRef.current += delta;
       updateRange();
 
@@ -158,5 +166,5 @@ export const useCarouselKinetics = ({
       listEl.removeEventListener('pointercancel', onPointerUpOrCancel);
       if (animationFrame) cancelAnimationFrame(animationFrame);
     };
-  }, [gain, friction, mainAxisSize, repeatCount, totalLength, overscan]);
+  }, [gain, friction, mainAxisSize, totalLength, baseTotal, gap, overscan]);
 };

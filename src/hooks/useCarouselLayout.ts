@@ -4,15 +4,15 @@ import { extentFromUrl } from '../utils/extentFromUrl';
 export const useCarouselLayout = ({
   listElRef,
   images,
-  repeatCount,
   isHorizontal,
   gap,
+  overscan,
 }: {
   listElRef: RefObject<HTMLUListElement | null>;
   images: string[];
-  repeatCount: number;
   isHorizontal: boolean;
   gap: number;
+  overscan: number;
 }) => {
   const [mainAxisSize, setMainAxisSize] = useState(0);
   const [crossAxisSize, setCrossAxisSize] = useState(0);
@@ -30,9 +30,29 @@ export const useCarouselLayout = ({
     return () => resizeObserver.disconnect();
   }, [isHorizontal]);
 
+  const { baseTotal, localRepeat } = useMemo(() => {
+    if (crossAxisSize <= 0 || !images.length) return { baseTotal: 0, localRepeat: 3 };
+
+    let acc = 0;
+    for (let i = 0; i < images.length; i++) {
+      const extent = extentFromUrl(images[i], crossAxisSize, isHorizontal);
+      acc += extent + (i === images.length - 1 ? 0 : gap);
+    }
+    const singleLoop = Math.max(0, acc);
+
+    const avgItemExtent = images.length > 0 ? singleLoop / images.length : 0;
+    const overscanPx = Math.max(0, overscan * 2) * avgItemExtent;
+
+    const target = mainAxisSize * 2 + overscanPx;
+    const needed = singleLoop > 0 ? Math.ceil(target / singleLoop) : 3;
+
+    const localRepeat = Math.max(3, Math.min(50, needed));
+    return { baseTotal: singleLoop, localRepeat };
+  }, [images, crossAxisSize, isHorizontal, gap, mainAxisSize, overscan]); // <-- overscan in deps
+
   const repeatedImages = useMemo(
-    () => Array(repeatCount).fill(images).flat(),
-    [images, repeatCount],
+    () => (images.length ? Array(localRepeat).fill(images).flat() : []),
+    [images, localRepeat],
   );
 
   const { offsets, totalLength, sizeAt } = useMemo(() => {
@@ -59,8 +79,6 @@ export const useCarouselLayout = ({
 
     return { offsets, totalLength, sizeAt };
   }, [repeatedImages, crossAxisSize, isHorizontal, gap]);
-
-  const baseTotal = useMemo(() => offsets[images.length] - gap, [images.length, offsets, gap]);
 
   return {
     mainAxisSize,

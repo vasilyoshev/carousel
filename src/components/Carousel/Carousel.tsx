@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 
 import { ImgWithPlaceholder } from '../ImgWithPlaceholder/ImgWithPlaceholder';
 import type { CarouselProps } from '../../interfaces/CarouselProps';
@@ -7,7 +7,6 @@ import { useCarouselKinetics } from '../../hooks/useCarouselKinetics';
 import { useCarouselVirtualWindow } from '../../hooks/useCarouselVirtualWindow';
 import { useCarouselInfiniteLoop } from '../../hooks/useCarouselInfiniteLoop';
 import { useCarouselLayout } from '../../hooks/useCarouselLayout';
-import { useCarouselRepeatCount } from '../../hooks/useCarouselRepeatCount';
 
 import styles from './Carousel.module.scss';
 
@@ -22,17 +21,15 @@ export const Carousel = ({
   const listElRef = useRef<HTMLUListElement>(null);
   const scrollPositionRef = useRef(0);
 
-  const [repeatCount, setRepeatCount] = useState(3);
-
   const isHorizontal = orientation === 'horizontal';
 
   const { mainAxisSize, repeatedImages, offsets, totalLength, sizeAt, baseTotal } =
     useCarouselLayout({
       listElRef,
       images,
-      repeatCount,
       isHorizontal,
       gap,
+      overscan,
     });
 
   const { range, updateRange } = useCarouselVirtualWindow({
@@ -46,9 +43,10 @@ export const Carousel = ({
   });
 
   useCarouselInfiniteLoop({
-    repeatCount,
     totalLength,
+    baseTotal,
     scrollPositionRef,
+    gap,
     updateRange,
   });
 
@@ -58,19 +56,12 @@ export const Carousel = ({
     gain,
     friction,
     mainAxisSize,
-    repeatCount,
     totalLength,
+    baseTotal,
     overscan,
     scrollPositionRef,
+    gap,
     updateRange,
-  });
-
-  useCarouselRepeatCount({
-    imagesLength: images.length,
-    baseTotal,
-    mainAxisSize,
-    overscan,
-    setRepeatCount,
   });
 
   const imagesSlice = repeatedImages.slice(range.start, range.end);
